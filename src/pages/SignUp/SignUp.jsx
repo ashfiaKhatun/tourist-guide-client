@@ -5,10 +5,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
 import HelmetHook from "../../hooks/HelmetHook";
+// import Swal from "sweetalert2";
+// import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 
 const SignUp = () => {
-    const { createUser, updateUser } = useAuth();
+    const { createUser, updateUser, signOutUser } = useAuth();
+
+    // const axiosPublic = useAxiosPublic();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -18,36 +22,60 @@ const SignUp = () => {
         e.preventDefault();
 
         const form = new FormData(e.currentTarget);
+
         const name = form.get('name');
         const photo = form.get('photo');
         const role = form.get('role');
         const email = form.get('email');
         const password = form.get('password');
 
-        console.log(name, photo, email, password, role);
-
         if (password.length < 6) {
-            toast.error('Password should be atleast 6 characters');
+            toast.error('Password should be at least 6 characters');
             return;
         }
         else if (!/[A-Z]/.test(password)) {
-            toast.error('Password should be atleast one uppercase characters');
+            toast.error('Password should be at least one uppercase characters');
             return;
         }
         else if (!/[a-z]/.test(password)) {
-            toast.error('Password should be atleast one lowercase characters');
+            toast.error('Password should be at least one lowercase characters');
             return;
         }
 
         createUser(email, password)
             .then(() => {
                 updateUser(name, photo)
+                    .then(() => {
+                        // send data to database
+                        const userInfo = {
+                            name: name,
+                            email: email,
+                            photo: photo,
+                            role: role
+                        }
+                        console.log(userInfo);
+                        signOutUser()
+                        navigate('/signIn');
+
+                        // axiosPublic.post('/users', userInfo)
+                        //     .then(res => {
+                        //         if (res.data.insertedId) {
+                        //             Swal.fire({
+                        //                 icon: "success",
+                        //                 title: "Success",
+                        //                 text: "Registration Successful",
+                        //             });
+                        //             signOutUser()
+                        //             navigate('/signIn');
+                        //         }
+                        //     })
+                    })
                     .catch(error => console.log(error))
             })
 
             .catch(error => console.log(error))
         e.target.reset();
-        navigate('/');
+
     }
 
     return (
