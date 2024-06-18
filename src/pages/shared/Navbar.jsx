@@ -10,6 +10,10 @@ const Navbar = () => {
 
     const { signOutUser, user, loader } = useAuth();
 
+    const isAdmin = false;
+    const isTourGuide = false;
+    const isTourist = true;
+
 
     const navigate = useNavigate();
 
@@ -42,9 +46,23 @@ const Navbar = () => {
         <li><NavLink to='/all-assignments'>Contact Us</NavLink></li>
 
         {
-            user &&
+            user && isAdmin &&
             <>
-                <li><NavLink to='/dashboard'>DashBoard</NavLink></li>
+                <li><NavLink to='/dashboard/admin-profile'>Admin Dashboard</NavLink></li>
+            </>
+
+        }
+        {
+            user && isTourGuide &&
+            <>
+                <li><NavLink to='/dashboard/guide-profile'>Tour Guide Dashboard</NavLink></li>
+            </>
+
+        }
+        {
+            user && isTourist &&
+            <>
+                <li><NavLink to='/dashboard/tourist-profile'>Tourist Dashboard</NavLink></li>
             </>
 
         }
