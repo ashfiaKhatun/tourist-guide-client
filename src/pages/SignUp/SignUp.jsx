@@ -5,14 +5,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
 import HelmetHook from "../../hooks/HelmetHook";
-// import Swal from "sweetalert2";
-// import useAxiosPublic from "../../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 
 const SignUp = () => {
     const { createUser, updateUser, signOutUser } = useAuth();
 
-    // const axiosPublic = useAxiosPublic();
+    const axiosPublic = useAxiosPublic();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -53,22 +53,19 @@ const SignUp = () => {
                             photo: photo,
                             role: role
                         }
-                        console.log(userInfo);
-                        signOutUser()
-                        navigate('/signIn');
 
-                        // axiosPublic.post('/users', userInfo)
-                        //     .then(res => {
-                        //         if (res.data.insertedId) {
-                        //             Swal.fire({
-                        //                 icon: "success",
-                        //                 title: "Success",
-                        //                 text: "Registration Successful",
-                        //             });
-                        //             signOutUser()
-                        //             navigate('/signIn');
-                        //         }
-                        //     })
+                        axiosPublic.post('/users', userInfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Success",
+                                        text: "Registration Successful",
+                                    });
+                                    signOutUser()
+                                    navigate('/signIn');
+                                }
+                            })
                     })
                     .catch(error => console.log(error))
             })
