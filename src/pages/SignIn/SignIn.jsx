@@ -6,12 +6,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import HelmetHook from "../../hooks/HelmetHook";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 
 const SignIn = () => {
     const { signInUser, googleSignIn } = useAuth();
 
     const [showPassword, setShowPassword] = useState(false);
+
+    const axiosPublic = useAxiosPublic();
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -30,8 +33,8 @@ const SignIn = () => {
                     icon: "success",
                     title: "Success...",
                     text: "Sign In Successful!!!",
-                    
-                  });
+
+                });
                 navigate(location?.state ? location.state : '/');
             })
             .catch(() => toast.error('Invalid email or password'))
@@ -41,16 +44,22 @@ const SignIn = () => {
 
     const handleGoogleSignIn = () => {
         googleSignIn()
-            .then(() => {
+            .then((result) => {
+                const userInfo = {
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    role: "Tourist"
+                }
+                axiosPublic.post('/users', userInfo)
                 Swal.fire({
                     icon: "success",
                     title: "Success...",
                     text: "Sign In Successful!!!",
-                    
-                  });
+
+                });
                 navigate(location?.state ? location.state : '/');
             })
-            .catch( error => console.log(error))
+            .catch(error => console.log(error))
     }
 
 
@@ -58,7 +67,7 @@ const SignIn = () => {
     return (
         <>
             <HelmetHook title='SignIn'>
-                
+
             </HelmetHook >
 
             <div className=" min-h-screen bg-base-200">

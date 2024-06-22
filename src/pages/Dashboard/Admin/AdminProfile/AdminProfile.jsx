@@ -1,8 +1,12 @@
+import UserInfo from "../../../../component/UserInfo";
+import HelmetHook from "../../../../hooks/HelmetHook";
 
 const AdminProfile = () => {
+
     return (
         <div>
-            admin profile
+            <HelmetHook title="Admin Home"></HelmetHook>
+            <UserInfo></UserInfo>
         </div>
     );
 };

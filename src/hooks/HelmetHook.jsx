@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 const HelmetHook = ({title}) => {
     return (
         <Helmet>
-            <title>Something | {title}</title>
+            <title>Tour-East | {title}</title>
         </Helmet>
     );
 };

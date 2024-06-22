@@ -1,8 +1,9 @@
+import UserInfo from "../../../../component/UserInfo";
 
 const MyProfile = () => {
     return (
         <div>
-            my profile
+            <UserInfo></UserInfo>
         </div>
     );
 };

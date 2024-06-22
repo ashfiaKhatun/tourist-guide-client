@@ -1,18 +1,20 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import proImg from '../../assets/user.png'
-import {useEffect, useState } from "react";
-import { Tooltip } from "react-tooltip";
+import { useEffect, useState } from "react";
 import { CiLight } from "react-icons/ci";
 import { FaRegMoon } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
+import useAdmin from "../../hooks/useAdmin";
+import useGuide from "../../hooks/useGuide";
+import useTourist from "../../hooks/useTourist";
 
 const Navbar = () => {
 
-    const { signOutUser, user, loader } = useAuth();
+    const { signOutUser, user, loader, justLoggedIn, setJustLoggedIn } = useAuth();
 
-    const isAdmin = false;
-    const isTourGuide = false;
-    const isTourist = true;
+    const [isAdmin, isAdminLoading] = useAdmin();
+    const [isGuide, isGuideLoading] = useGuide();
+    const [isTourist, isTouristLoading] = useTourist();
 
 
     const navigate = useNavigate();
@@ -38,40 +40,63 @@ const Navbar = () => {
         document.querySelector('html').setAttribute("data-theme", localTheme);
     }, [theme])
 
+    useEffect(() => {
+        if (justLoggedIn && !isAdminLoading && !isGuideLoading && !isTouristLoading) {
+            if (isAdmin) {
+                navigate('/')
+            }
+            else if (isGuide) {
+                navigate('/')
+            }
+            else if (isTourist) {
+                navigate('/')
+            }
+            setJustLoggedIn(false);
+        }
+    }, [isAdmin, isAdminLoading, isGuide, isGuideLoading, navigate, justLoggedIn, setJustLoggedIn, isTourist, isTouristLoading])
+
     const navList = <>
         <li><NavLink to='/'>Home</NavLink></li>
         <li><NavLink to='/all-assignments'>Community</NavLink></li>
         <li><NavLink to='/all-assignments'>Blogs</NavLink></li>
         <li><NavLink to='/all-assignments'>About Us</NavLink></li>
         <li><NavLink to='/all-assignments'>Contact Us</NavLink></li>
-
-        {
-            user && isAdmin &&
-            <>
-                <li><NavLink to='/dashboard/admin-profile'>Admin Dashboard</NavLink></li>
-            </>
-
-        }
-        {
-            user && isTourGuide &&
-            <>
-                <li><NavLink to='/dashboard/guide-profile'>Tour Guide Dashboard</NavLink></li>
-            </>
-
-        }
-        {
-            user && isTourist &&
-            <>
-                <li><NavLink to='/dashboard/tourist-profile'>Tourist Dashboard</NavLink></li>
-            </>
-
-        }
     </>
+
+    const dropdownList =
+        <>
+            {
+                user && isAdmin &&
+                <>
+                    <li><NavLink to='/dashboard/admin-profile'>DashBoard</NavLink></li>
+                    <li className="mt-2 mb-2">Name: {user.displayName}</li>
+                    <li>Email: {user.email}</li>
+                </>
+
+            }
+            {
+                user && isGuide &&
+                <>
+                    <li><NavLink to='/dashboard/guide-profile'>DashBoard</NavLink></li>
+                    <li className="mt-2 mb-2">Name: {user.displayName}</li>
+                    <li>Email: {user.email}</li>
+                </>
+
+            }
+            {
+                user && isTourist &&
+                <>
+                    <li><NavLink to='/dashboard/tourist-profile'>DashBoard</NavLink></li>
+                    <li className="mt-2 mb-2">Name: {user.displayName}</li>
+                    <li>Email: {user.email}</li>
+                </>
+            }
+        </>
 
     const handleSignOut = () => {
         signOutUser()
             .catch(error => console.log(error))
-            
+
         navigate('/signin')
     }
 
@@ -86,7 +111,7 @@ const Navbar = () => {
                         {navList}
                     </ul>
                 </div>
-                <a href="/"><img src="https://i.ibb.co/YXg5Cv8/image.png" className="md:w-40 h-8 md:h-12 lg:ml-16 rounded-xl" alt="" /></a>
+                <a href="/" className="text-3xl font-bold text-cyan-800">Tour-East</a>
             </div>
 
             <div className="navbar-center hidden md:flex">
@@ -122,15 +147,15 @@ const Navbar = () => {
                                 loader ? <span className="loading loading-dots loading-sm"></span> :
                                     <>
                                         <div className="mr-4">
-                                            <a
-                                                data-tooltip-id="my-tooltip"
-                                                data-tooltip-content= {user.displayName}
-                                                
-                                                data-tooltip-place="top"
-                                            >
-                                                <img src={user.photoURL} className="w-12 h-12 rounded-full" />
-                                            </a>
-                                            <Tooltip id="my-tooltip" />
+                                            <div className="dropdown">
+                                                <div tabIndex={0} role="button" className=" m-1 rounded-full">
+                                                    <img src={user.photoURL} className=" w-12 h-12 rounded-full" />
+                                                </div>
+
+                                                <ul tabIndex={0} className="dropdown-content z-10 menu p-2 shadow bg-base-100 rounded-box w-40">
+                                                    {dropdownList}
+                                                </ul>
+                                            </div>
                                         </div>
 
 

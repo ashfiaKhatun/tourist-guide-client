@@ -15,6 +15,7 @@ import MyAssignedTours from "../pages/Dashboard/TourGuide/MyAssignedTours/MyAssi
 import TouristProfile from "../pages/Dashboard/Tourist/TouristProfile/TouristProfile";
 import MyBookings from "../pages/Dashboard/Tourist/MyBookings/MyBookings";
 import MyWishlist from "../pages/Dashboard/Tourist/MyWishlist/MyWishlist";
+import Viewpackage from "../pages/Home/TravelGuide/Viewpackage";
 
 const router = createBrowserRouter([
     {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
             {
                 path: '/signup',
                 element: <SignUp></SignUp>
+            },
+            {
+                path: '/package-details/:id',
+                element: <Viewpackage></Viewpackage>
             },
            
         ]

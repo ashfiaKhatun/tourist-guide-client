@@ -1,11 +1,14 @@
 import { FaHome } from "react-icons/fa";
 import { Link, NavLink, Outlet } from "react-router-dom";
+import useAdmin from "../hooks/useAdmin";
+import useGuide from "../hooks/useGuide";
+import useTourist from "../hooks/useTourist";
 
 const Dashboard = () => {
 
-    const isAdmin = false;
-    const isTourGuide = false;
-    const isTourist = true;
+    const [isAdmin] = useAdmin();
+    const [isGuide] = useGuide();
+    const [isTourist] = useTourist();
 
     return (
         <div className='flex'>
@@ -38,7 +41,7 @@ const Dashboard = () => {
 
                             {/* Tour Guide  Sidebar content here */}
                             {
-                                isTourGuide &&
+                                isGuide &&
                                 <>
                                     <li className='text-sm lg:text-base shadow-xl p-2 rounded-md'><NavLink to='/dashboard/guide-profile'>Tour Guide Home</NavLink></li>
 

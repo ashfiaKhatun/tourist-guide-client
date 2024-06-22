@@ -10,7 +10,7 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 
 const SignUp = () => {
-    const { createUser, updateUser, signOutUser } = useAuth();
+    const { createUser, googleSignIn, updateUser, signOutUser } = useAuth();
 
     const axiosPublic = useAxiosPublic();
 
@@ -30,15 +30,15 @@ const SignUp = () => {
         const password = form.get('password');
 
         if (password.length < 6) {
-            toast.error('Password should be at least 6 characters');
+            toast.error('Password should be atleast 6 characters');
             return;
         }
         else if (!/[A-Z]/.test(password)) {
-            toast.error('Password should be at least one uppercase characters');
+            toast.error('Password should be atleast one uppercase characters');
             return;
         }
         else if (!/[a-z]/.test(password)) {
-            toast.error('Password should be at least one lowercase characters');
+            toast.error('Password should be atleast one lowercase characters');
             return;
         }
 
@@ -73,6 +73,27 @@ const SignUp = () => {
             .catch(error => console.log(error))
         e.target.reset();
 
+    }
+
+
+    const handleGoogleSignIn = () => {
+        googleSignIn()
+            .then((result) => {
+                const userInfo = {
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    role: "Tourist"
+                }
+                axiosPublic.post('/users', userInfo)
+                Swal.fire({
+                    icon: "success",
+                    title: "Success...",
+                    text: "Sign In Successful!!!",
+
+                });
+                navigate(location?.state ? location.state : '/');
+            })
+            .catch(error => console.log(error))
     }
 
     return (
@@ -151,8 +172,13 @@ const SignUp = () => {
                                 <button className="btn bg-cyan-800 hover:bg-cyan-950 text-white">Sign Up</button>
                             </div>
                         </form>
+
                         <div className="text-center mb-2">
                             <p>Already have any account? Please <Link to='/signin'><button className="btn btn-link">Sign In</button></Link></p>
+                        </div>
+
+                        <div className="px-8">
+                            <button onClick={handleGoogleSignIn} className="btn btn-outline w-full ">Google</button>
                         </div>
                     </div>
                 </div>
